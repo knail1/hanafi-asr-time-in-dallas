@@ -4,6 +4,10 @@ import requests
 import tempfile
 import PyPDF2
 from tabula import wrapper
+#from config import Config
+from flask_bootstrap import Bootstrap
+import datetime
+
 import json
 
 #import os
@@ -11,6 +15,8 @@ import json
 FILENAME = 'pdf.pdf'
 
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
+#app.config.from_object(Config)
 
 def pullPdf(uri):
     r = requests.get(uri)
@@ -26,15 +32,21 @@ def pdfParser(pdfFile):
     #print(pageObj.extractText())
     #print(pdfReader.numPages
     #df = wrapper.read_pdf(pdfFile, output_format = "json")
-    df = wrapper.read_pdf(pdfFile)
+    df = wrapper.read_pdf(pdfFile,
+                          spreadsheet = True,
+                          area = (136.43, 58.64, 602.63, 554.93))
+    #top, left, bottom, right
+    #csvTimes = wrapper.convert_into(FILENAME, "output.csv", output_format="csv", pages='all')
+
     return(df)
+    #return((csvTimes, df))
 
 
 
 
 
 @app.route('/')
-def hello_world():
+def todaysPrayerTimes():
     aprilUri = 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2019.pdf'
     pdfFileName = pullPdf(aprilUri)
     df_output = pdfParser(pdfFileName)
@@ -43,9 +55,17 @@ def hello_world():
     #parsed = json.load(df)
     #print(parsed)
     #print(json.dumps(parsed, indent=4, sort_keys=True))
-    return render_template('index.html', title='PrayerSched', table=df_output)
+    print(df_output)
+
+    currentDT = datetime.datetime.now()
+    currentDay = int(currentDT.strftime("%d"))
+
+    if df_output.columns[1] == currentDT.strftime("%B"):
+        asrTiming = df_output.iloc[21][6]
+
+
+    return render_template('index.html', title='PrayerSched', asrTiming = asrTiming, table=df_output.to_html(index=False))
 
 
 if __name__ == '__main__':
-
     app.run()

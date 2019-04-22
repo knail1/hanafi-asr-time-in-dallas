@@ -1,0 +1,48 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+{{ super() }}
+
+
+<title>
+{% block title %}
+{% if title %}
+    {{ title }} - Team 07
+{% else %}
+    Dallas Hanafi times
+{% endif %}
+{% endblock %}
+</title>
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse" role="navigation">
+    <!-- <div class="container"> -->
+        <!-- <div class="navbar"> -->
+    <a class="navbar-brand h1" href="/index" >Dallas Hanafi Prayer Times for today</a>
+            <ul class="nav navbar-nav">
+                <li><a href="/index">Home</a></li>
+            </ul>
+        <!-- </div> -->
+    <!-- </div> -->
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+
+{% endblock %}

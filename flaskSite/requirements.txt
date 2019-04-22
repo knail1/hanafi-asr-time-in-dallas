@@ -2,3 +2,4 @@ requests
 PyPDF2
 tabula
 tabula_py
+flask_bootstrap

@@ -1,18 +1,11 @@
+{% extends "base.html" %}
+
 {% block page_content %}
 <div class="container">
-    <h1>PrayerTimes:</h1>
+    <h1>Asr : {{ asrTiming }}</h1>
 
-    <table class ="table table-bordered table-hover"  border="1" cellpadding="5" cellspacing="5">
+    <!-- {{ table|safe }} -->
 
-        {% for row in table %}
-            <tr>
-
-                {% for d in row %}
-                    <td>{{ d }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
 
 </div>
 {% endblock %}
