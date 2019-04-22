@@ -50,11 +50,6 @@ def todaysPrayerTimes():
     aprilUri = 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2019.pdf'
     pdfFileName = pullPdf(aprilUri)
     df_output = pdfParser(pdfFileName)
-
-    #parsed = json.loads(df_output)
-    #parsed = json.load(df)
-    #print(parsed)
-    #print(json.dumps(parsed, indent=4, sort_keys=True))
     print(df_output)
 
     currentDT = datetime.datetime.now()
