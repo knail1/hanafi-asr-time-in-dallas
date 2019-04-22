@@ -26,22 +26,12 @@ def pullPdf(uri):
     return(FILENAME)
 
 def pdfParser(pdfFile):
-    pdfFileObj = open(pdfFile, 'rb')
-    pdfReader = PyPDF2.PdfFileReader(pdfFile)
-    pageObj = pdfReader.getPage(0)
-    #print(pageObj.extractText())
-    #print(pdfReader.numPages
-    #df = wrapper.read_pdf(pdfFile, output_format = "json")
     df = wrapper.read_pdf(pdfFile,
                           spreadsheet = True,
                           area = (136.43, 58.64, 602.63, 554.93))
     #top, left, bottom, right
-    #csvTimes = wrapper.convert_into(FILENAME, "output.csv", output_format="csv", pages='all')
 
     return(df)
-    #return((csvTimes, df))
-
-
 
 
 
