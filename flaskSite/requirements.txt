@@ -1,0 +1,4 @@
+requests
+PyPDF2
+tabula
+tabula_py
