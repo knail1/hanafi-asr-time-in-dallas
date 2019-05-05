@@ -38,7 +38,7 @@ def pdfParser(pdfFile):
 
 
 
-@app.route('/')
+@app.route('/asr')
 def todaysPrayerTimes():
     aprilUri = 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2019.pdf'
     pdfFileName = pullPdf(aprilUri)
@@ -55,7 +55,7 @@ def todaysPrayerTimes():
     return render_template('index.html', title='PrayerSched', asrTiming = asrTiming, table=df_output.to_html(index=False))
 
 
-@app.route('/upload')
+@app.route('/')
 def upload():
     return render_template('upload.html')
 
