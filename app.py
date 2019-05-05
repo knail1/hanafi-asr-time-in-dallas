@@ -69,7 +69,7 @@ def todaysPrayerTimes():
     currentDay = int(currentDT.strftime("%d"))
 
     if df_output.columns[1] == currentDT.strftime("%B"):
-        asrTiming = df_output.iloc[21][6]
+        asrTiming = df_output.iloc[currentDay][6]
 
 
     return render_template('index.html', title='PrayerSched', asrTiming = asrTiming, table=df_output.to_html(index=False))
