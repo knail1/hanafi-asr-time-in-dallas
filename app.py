@@ -8,6 +8,9 @@ from tabula import wrapper
 from flask_bootstrap import Bootstrap
 import datetime
 
+from flask import Flask, render_template, request
+from werkzeug import secure_filename
+
 import json
 
 #import os
@@ -52,5 +55,23 @@ def todaysPrayerTimes():
     return render_template('index.html', title='PrayerSched', asrTiming = asrTiming, table=df_output.to_html(index=False))
 
 
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
+
+
+@app.route('/uploader', methods=['GET', 'POST'])
+def uploader():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
+        return 'file uploaded successfully'
+
+
+
+#app = Flask(__name__)
+
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
