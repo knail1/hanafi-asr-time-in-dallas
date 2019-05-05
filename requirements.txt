@@ -4,3 +4,4 @@ tabula
 tabula_py
 flask_bootstrap
 werkzeug
+gunicorn
