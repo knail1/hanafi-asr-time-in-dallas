@@ -10,7 +10,7 @@ import datetime
 
 from flask import Flask, render_template, request
 from werkzeug import secure_filename
-
+import os
 import json
 
 #import os
@@ -18,6 +18,7 @@ import json
 FILENAME = 'pdf.pdf'
 
 app = Flask(__name__)
+
 bootstrap = Bootstrap(app)
 #app.config.from_object(Config)
 
@@ -69,29 +70,23 @@ def todaysPrayerTimes():
     currentDay = int(currentDT.strftime("%d"))
 
     if df_output.columns[1] == currentDT.strftime("%B"):
+        fajrTiming = df_output.iloc[currentDay][3]
+        sunRise = df_output.iloc[currentDay][4]
+        duhrTiming = df_output.iloc[currentDay][5]
         asrTiming = df_output.iloc[currentDay][6]
+        maghribTiming = df_output.iloc[currentDay][7]
+        ishaTiming = df_output.iloc[currentDay][8]
 
 
-    return render_template('index.html', title='PrayerSched', asrTiming = asrTiming, table=df_output.to_html(index=False))
-
-
-@app.route('/upload')
-def upload():
-    return render_template('upload.html')
-
-
-@app.route('/uploader', methods=['GET', 'POST'])
-def uploader():
-    if request.method == 'POST':
-        f = request.files['file']
-        # os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        f.save(secure_filename(f.filename))
-        #return 'file uploaded successfully'
-        return render_template('postUpload.html', fileName = f.filename)
-
-
-
-#app = Flask(__name__)
+    return render_template('index.html',
+                           title='PrayerSched',
+                           fajrTiming = fajrTiming,
+                           sunRise = sunRise,
+                           duhrTiming = duhrTiming,
+                           asrTiming = asrTiming,
+                           maghribTiming = maghribTiming,
+                           ishaTiming = ishaTiming,
+                           table=df_output.to_html(index=False))
 
 
 
