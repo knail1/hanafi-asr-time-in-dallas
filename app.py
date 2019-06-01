@@ -41,13 +41,12 @@ def pdfParser(pdfFile):
 
 def selectURI(x):
     return {
-        'January': 'http://masjidyaseen.org/wp-content/uploads/2019/04/January-2020.pdf',
-        'Febuary': 'http://masjidyaseen.org/wp-content/uploads/2019/04/Febuary-2020.pdf',
-        'March': 'http://masjidyaseen.org/wp-content/uploads/2019/04/March-2020.pdf',
-        'April': 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2019.pdf',
+        'January': 'http://masjidyaseen.org/wp-content/uploads/2019/01/January-2020.pdf',
+        'Febuary': 'http://masjidyaseen.org/wp-content/uploads/2019/02/Febuary-2020.pdf',
+        'March': 'http://masjidyaseen.org/wp-content/uploads/2019/03/March-2020.pdf',
+        'April': 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2020.pdf',
         'May': 'http://masjidyaseen.org/wp-content/uploads/2019/05/May-2019.pdf',
-        #'June': 'http://masjidyaseen.org/wp-content/uploads/2019/05/June-2019.pdf',
-        'June': 'http://masjidyaseen.org/wp-content/uploads/2019/05/Ramadan-1440.pdf',
+        'June': 'http://masjidyaseen.org/wp-content/uploads/2019/06/June-2019.pdf',
         'July': 'http://masjidyaseen.org/wp-content/uploads/2019/05/July-2019.pdf',
         'August': 'http://masjidyaseen.org/wp-content/uploads/2019/05/August-2019.pdf',
         'September': 'http://masjidyaseen.org/wp-content/uploads/2019/05/September-2019.pdf',
@@ -90,6 +89,42 @@ def todaysPrayerTimes():
                            table=df_output.to_html(index=False))
 
 
+@app.route('/ramadan')
+def ramadan_todaysPrayerTimes():
+    currentDT = datetime.datetime.now()
+
+    ramadanURI = 'http://masjidyaseen.org/wp-content/uploads/2019/05/Ramadan-1440.pdf'
+    #aprilUri = 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2019.pdf'
+    #mayUri = 'http://masjidyaseen.org/wp-content/uploads/2019/05/May-2019.pdf'
+    #theUri = selectURI(currentDT.strftime("%B"))
+    theUri = ramadanURI
+    pdfFileName = pullPdf(theUri)
+    df_output = pdfParser(pdfFileName)
+    print(df_output)
+    print("---")
+
+    currentDay = int(currentDT.strftime("%d")) + 25 # fixing index of the new cut table
+    print(df_output.iloc[currentDay][3])
+
+    #if df_output.columns[1] == currentDT.strftime("%B"):
+    if df_output.columns[1] == 'May/June':
+        fajrTiming = df_output.iloc[currentDay][3]
+        sunRise = df_output.iloc[currentDay][4]
+        duhrTiming = df_output.iloc[currentDay][5]
+        asrTiming = df_output.iloc[currentDay][6]
+        maghribTiming = df_output.iloc[currentDay][7]
+        ishaTiming = df_output.iloc[currentDay][8]
+
+
+    return render_template('index.html',
+                           title='PrayerSched',
+                           fajrTiming = fajrTiming,
+                           sunRise = sunRise,
+                           duhrTiming = duhrTiming,
+                           asrTiming = asrTiming,
+                           maghribTiming = maghribTiming,
+                           ishaTiming = ishaTiming,
+                           table=df_output.to_html(index=False))
 
 if __name__ == '__main__':
     app.run(debug=True)
