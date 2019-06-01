@@ -4,6 +4,7 @@ import requests
 import tempfile
 import PyPDF2
 from tabula import wrapper
+import pandas as pd
 #from config import Config
 from flask_bootstrap import Bootstrap
 import datetime
@@ -16,7 +17,7 @@ import json
 #import os
 
 FILENAME = 'pdf.pdf'
-
+DAILY_TIME_LOCAL_STORAGE_DIRECTORY = 'localFiles'
 app = Flask(__name__)
 
 bootstrap = Bootstrap(app)
@@ -34,7 +35,7 @@ def pdfParser(pdfFile):
                           spreadsheet = True,
                           area = (136.43, 58.64, 602.63, 554.93))
     #top, left, bottom, right
-
+    df = pd.DataFrame(data=df)
     return(df)
 
 
@@ -56,6 +57,22 @@ def selectURI(x):
 
         }[x]
 
+def writeTodaysPrayerTimes(currentDT, df):
+    day = currentDT.strftime("%d")
+    month = currentDT.strftime("%B")
+    year = currentDT.strftime("%Y")
+    fileName = month + "-" + day + "-" + year
+    fullFilePath = DAILY_TIME_LOCAL_STORAGE_DIRECTORY + "/" +fileName
+    exists = os.path.isfile(fullFilePath)
+    if exists:
+        pass
+    else:
+        df.to_csv(path_or_buf=fullFilePath)
+
+    return(fullFilePath)
+
+
+
 @app.route('/')
 def todaysPrayerTimes():
     currentDT = datetime.datetime.now()
@@ -68,6 +85,7 @@ def todaysPrayerTimes():
     print(df_output)
 
     currentDay = int(currentDT.strftime("%d"))
+
 
     if df_output.columns[1] == currentDT.strftime("%B"):
         fajrTiming = df_output.iloc[currentDay][3]
@@ -106,14 +124,26 @@ def ramadan_todaysPrayerTimes():
     currentDay = int(currentDT.strftime("%d")) + 25 # fixing index of the new cut table
     print(df_output.iloc[currentDay][3])
 
-    #if df_output.columns[1] == currentDT.strftime("%B"):
-    if df_output.columns[1] == 'May/June':
-        fajrTiming = df_output.iloc[currentDay][3]
-        sunRise = df_output.iloc[currentDay][4]
-        duhrTiming = df_output.iloc[currentDay][5]
-        asrTiming = df_output.iloc[currentDay][6]
-        maghribTiming = df_output.iloc[currentDay][7]
-        ishaTiming = df_output.iloc[currentDay][8]
+    #~~~~~NEW CODE FOR LOCAL CACHE READ IN
+    fileWithTodaysTimings = writeTodaysPrayerTimes(currentDT,df_output.iloc[currentDay])
+    df_output_back = pd.DataFrame.from_csv(fileWithTodaysTimings)
+    df_dict = df_output_back.to_dict()
+
+    #~~~~~
+
+    #if df_output.columns[1] == 'May/June':
+    #    fajrTiming = df_output.iloc[currentDay][3]
+    #    sunRise = df_output.iloc[currentDay][4]
+    #    duhrTiming = df_output.iloc[currentDay][5]
+    #    asrTiming = df_output.iloc[currentDay][6]
+    #    maghribTiming = df_output.iloc[currentDay][7]
+    #    ishaTiming = df_output.iloc[currentDay][8]
+    fajrTiming = df_dict['AMADAN']['Fajr']
+    sunRise = df_dict['AMADAN']['Sunrise']
+    duhrTiming = df_dict['AMADAN']['Dhuhr']
+    asrTiming = df_dict['AMADAN']['Asr']
+    maghribTiming = df_dict['AMADAN']['Maghrib']
+    ishaTiming = df_dict['AMADAN']['Isha']
 
 
     return render_template('index.html',
