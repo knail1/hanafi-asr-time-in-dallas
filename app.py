@@ -33,7 +33,9 @@ def pullPdf(uri):
 def pdfParser(pdfFile):
     df = wrapper.read_pdf(pdfFile,
                           spreadsheet = True,
-                          area = (136.43, 58.64, 602.63, 554.93))
+                          # (top,left,bottom,right).
+                          #area = (136.43, 58.64, 602.63, 554.93))
+                          area = (129.52, 59.99, 602.63, 553.13))
     #top, left, bottom, right
     df = pd.DataFrame(data=df)
     return(df)
@@ -48,12 +50,12 @@ def selectURI(x):
         'April': 'http://masjidyaseen.org/wp-content/uploads/2019/04/April-2020.pdf',
         'May': 'http://masjidyaseen.org/wp-content/uploads/2019/05/May-2019.pdf',
         'June': 'http://masjidyaseen.org/wp-content/uploads/2019/06/June-2019.pdf',
-        'July': 'http://masjidyaseen.org/wp-content/uploads/2019/05/July-2019.pdf',
-        'August': 'http://masjidyaseen.org/wp-content/uploads/2019/05/August-2019.pdf',
-        'September': 'http://masjidyaseen.org/wp-content/uploads/2019/05/September-2019.pdf',
-        'October': 'http://masjidyaseen.org/wp-content/uploads/2019/05/October-2019.pdf',
-        'November': 'http://masjidyaseen.org/wp-content/uploads/2019/05/November-2019.pdf',
-        'December': 'http://masjidyaseen.org/wp-content/uploads/2019/05/December-2019.pdf',
+        'July': 'http://masjidyaseen.org/wp-content/uploads/2019/07/July-2019.pdf',
+        'August': 'http://masjidyaseen.org/wp-content/uploads/2019/08/August-2019.pdf',
+        'September': 'http://masjidyaseen.org/wp-content/uploads/2019/09/September-2019.pdf',
+        'October': 'http://masjidyaseen.org/wp-content/uploads/2019/10/October-2019.pdf',
+        'November': 'http://masjidyaseen.org/wp-content/uploads/2019/11/November-2019.pdf',
+        'December': 'http://masjidyaseen.org/wp-content/uploads/2019/12/December-2019.pdf',
 
         }[x]
 
